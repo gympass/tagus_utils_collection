@@ -1,0 +1,2166 @@
+{
+	"info": {
+		"_postman_id": "144dad14-3383-4395-9774-acde84994ae1",
+		"name": "TagusUtils",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "DeletUserTagusWithPlan",
+			"item": [
+				{
+					"name": "GetUserByEmail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"let id_user = res.results[0].id",
+									"pm.environment.set(\"USER_ID\", id_user);",
+									"var email = pm.environment.get(\"email_user\")",
+									"pm.environment.set(\"email_user\", decodeURIComponent(email))",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var email = pm.environment.get(\"email_user\")",
+									"pm.environment.set(\"email_user\", encodeURIComponent(email))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TAGUS_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{TAGUS_URL}}/v1/users?email={{email_user}}",
+							"host": [
+								"{{TAGUS_URL}}"
+							],
+							"path": [
+								"v1",
+								"users"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "{{email_user}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserOrder",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"let id_order = res[0].id",
+									"pm.environment.set(\"id_order\", id_order);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TAGUS_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{TAGUS_URL}}/v2/users/{{USER_ID}}/orders",
+							"host": [
+								"{{TAGUS_URL}}"
+							],
+							"path": [
+								"v2",
+								"users",
+								"{{USER_ID}}",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "exclude",
+									"value": "CANCELED",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CancelPlanByOrderId",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{TOKEN_ATLANTIC}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ATLANTIC_URL}}/v1/user-orders/{{id_order}}/cancel",
+							"host": [
+								"{{ATLANTIC_URL}}"
+							],
+							"path": [
+								"v1",
+								"user-orders",
+								"{{id_order}}",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUserById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TAGUS_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{TAGUS_URL}}/v1/users/{{USER_ID}}",
+							"host": [
+								"{{TAGUS_URL}}"
+							],
+							"path": [
+								"v1",
+								"users",
+								"{{USER_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetEligibilityByEmail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"let eligible_member_id = res.eligible_member_id",
+									"pm.environment.set(\"eligible_member_id\", eligible_member_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{HADES_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HADES_URL}}/v1/eligibility/match?client_id={{CLIENT_ID}}&email={{email_user}}",
+							"host": [
+								"{{HADES_URL}}"
+							],
+							"path": [
+								"v1",
+								"eligibility",
+								"match"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{CLIENT_ID}}"
+								},
+								{
+									"key": "email",
+									"value": "{{email_user}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteElegibleMember",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{HADES_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HADES_URL}}/v1/clients/{{CLIENT_ID}}/eligible-members/{{eligible_member_id}}",
+							"host": [
+								"{{HADES_URL}}"
+							],
+							"path": [
+								"v1",
+								"clients",
+								"{{CLIENT_ID}}",
+								"eligible-members",
+								"{{eligible_member_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DeletUserTagusWithoutPlan",
+			"item": [
+				{
+					"name": "GetUserByEmail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"let id_user = res.results[0].id",
+									"pm.environment.set(\"USER_ID\", id_user);",
+									"var email = pm.environment.get(\"email_user\")",
+									"pm.environment.set(\"email_user\", decodeURIComponent(email))",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var email = pm.environment.get(\"email_user\")",
+									"pm.environment.set(\"email_user\", encodeURIComponent(email))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TAGUS_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{TAGUS_URL}}/v1/users?email={{email_user}}",
+							"host": [
+								"{{TAGUS_URL}}"
+							],
+							"path": [
+								"v1",
+								"users"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "{{email_user}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUserById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TAGUS_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{TAGUS_URL}}/v1/users/{{USER_ID}}",
+							"host": [
+								"{{TAGUS_URL}}"
+							],
+							"path": [
+								"v1",
+								"users",
+								"{{USER_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetEligibilityByEmail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"let eligible_member_id = res.eligible_member_id",
+									"pm.environment.set(\"eligible_member_id\", eligible_member_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{HADES_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HADES_URL}}/v1/eligibility/match?client_id={{CLIENT_ID}}&email={{email_user}}",
+							"host": [
+								"{{HADES_URL}}"
+							],
+							"path": [
+								"v1",
+								"eligibility",
+								"match"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{CLIENT_ID}}"
+								},
+								{
+									"key": "email",
+									"value": "{{email_user}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteElegibleMember",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{HADES_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HADES_URL}}/v1/clients/{{CLIENT_ID}}/eligible-members/{{eligible_member_id}}",
+							"host": [
+								"{{HADES_URL}}"
+							],
+							"path": [
+								"v1",
+								"clients",
+								"{{CLIENT_ID}}",
+								"eligible-members",
+								"{{eligible_member_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Booking",
+			"item": [
+				{
+					"name": "1 - Create Class",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"",
+									"pm.environment.set(\"class_id\", res.classes[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "6sloy1NgVv4sBRsjLju3x3zIW6P8IVTv9xIPeYF4",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"classes\": [\n        {\n            \"name\": \"Musculação\",\n            \"description\": \"Teste para Descrição da Aula\",\n            \"notes\": \"Observações para preparo da Aula\",\n            \"bookable\": true,\n            \"visible\": true,\n            \"product_id\": \"410864\",\n            \"reference\": \"22222\",\n            \"categories\": [\n                1\n            ],\n            \"levels\": [\n                1\n            ]\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{BOOKING_URL}}/gyms/{{gym_id}}/classes",
+							"host": [
+								"{{BOOKING_URL}}"
+							],
+							"path": [
+								"gyms",
+								"{{gym_id}}",
+								"classes"
+							]
+						},
+						"description": "Examples of how to create a new class resource."
+					},
+					"response": [
+						{
+							"name": "Classes - Create",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/vnd.gympass.booking.v1+json; charset=utf-8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"classes\": [\n        {\n            \"name\": \"Aula Nova\",\n            \"slug\": \"aula-nova\",\n            \"description\": \"Descriptionzinha da aula nova\",\n            \"notes\": \"Notes da aula nova\",\n            \"lengthInMinutes\": 50,\n            \"price\": {\n                \"amount\": 59.90,\n                \"currency\": \"BRL\"\n            },\n            \"capacity\": {\n                \"total\": 10,\n                \"online\": 5\n            },\n            \"bookable\": true,\n            \"visible\": true,\n            \"productId\": 1,\n            \"categories\": [\n                1\n                ,\n                2\n                \n            ],\n            \"levels\": [\n                2\n            ]\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "https://2c99438d-d60e-4669-838b-2841b9745e68.mock.pstmn.io/api/gyms/1/classes",
+									"protocol": "https",
+									"host": [
+										"2c99438d-d60e-4669-838b-2841b9745e68",
+										"mock",
+										"pstmn",
+										"io"
+									],
+									"path": [
+										"api",
+										"gyms",
+										"1",
+										"classes"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "",
+									"value": "",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"classes\": [\n        {\n            \"id\": 35,\n            \"name\": \"Aula Nova\",\n            \"links\": [\n                {\n                    \"rel\": \"self\",\n                    \"href\": \"gyms/123/classes/35\"\n                }\n            ]\n        }\n    ]\n}"
+						},
+						{
+							"name": "Classes - Create - 400",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/vnd.gympass.booking.v1+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"slug\": \"judo-class-with-lasers\",\n    \"notes\": \"Some pretty notes here.\",\n    \"categories\": [25, 32, 66],\n    \"levels\": [15],\n    \"price\": {\n        \"amount\": 29.9,\n        \"currency\": \"USD\"\n    },\n    \"bookable\": true,\n    \"visible\": true,\n    \"productId\": 200\n}"
+								},
+								"url": {
+									"raw": "https://2c99438d-d60e-4669-838b-2841b9745e68.mock.pstmn.io/api/gyms/2/classes",
+									"protocol": "https",
+									"host": [
+										"2c99438d-d60e-4669-838b-2841b9745e68",
+										"mock",
+										"pstmn",
+										"io"
+									],
+									"path": [
+										"api",
+										"gyms",
+										"2",
+										"classes"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/vnd.gympass.booking.v1+json; charset=utf-8",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_metadata\": {\n        \"errors\": 2\n    },\n    \"errors\": [\n        {\n            \"key\": \"create.class.name.not.provided\",\n            \"message\": \"Field 'name' is mandatory for class creation.\"\n        },\n        {\n            \"key\": \"create.class.description.not.provided\",\n            \"message\": \"Field 'description' is mandatory for class creation.\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "2 - Create Slot",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var date = new Date();",
+									"pm.environment.set(\"opens_at\", date.toISOString());",
+									"date.setMinutes(date.getMinutes()+30);",
+									"pm.environment.set(\"occur_date\", date.toISOString());",
+									"pm.environment.set(\"closes_at\", date.toISOString());",
+									"pm.environment.set(\"cancellable_until\", date.toISOString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Skip-User-Plan-Validation",
+								"value": "true",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"occur_date\": \"{{occur_date}}\",\n    \"status\": 1,\n    \"room\": \"Room 1\",\n    \"length_in_minutes\": 60,\n    \"total_capacity\": 15,\n    \"total_booked\": 1,\n    \"product_id\": \"{{product_id}}\",\n    \"booking_window\": {\n        \"opens_at\": \"{{opens_at}}\",\n        \"closes_at\": \"{{closes_at}}\"\n    },\n    \"cancellable_until\": \"{{closes_at}}\",\n    \"instructors\": [\n        {\n            \"name\": \"Test Automation\",\n            \"substitute\": true\n        }\n    ],\n    \"rate\": 4.0,\n    \"virtual\": true,\n    \"virtual_class_url\": \"https://zoom.us/join\"\n}"
+						},
+						"url": {
+							"raw": "{{BOOKING_URL}}/gyms/{{gym_id}}/classes/{{class_id}}/slots",
+							"host": [
+								"{{BOOKING_URL}}"
+							],
+							"path": [
+								"gyms",
+								"{{gym_id}}",
+								"classes",
+								"{{class_id}}",
+								"slots"
+							]
+						},
+						"description": "Examples of how to create a new class resource."
+					},
+					"response": [
+						{
+							"name": "Class Slots - Create",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"date\": \"2019-06-02T00:00:00-03:00\",\n    \"room\": \"Room 2\",\n    \"length_in_minutes\": 60,\n    \"status\": 1,\n    \"total_capacity\": 15,\n    \"total_booked\": 5,\n    \"product_id\": 200,\n    \"price\": {\n        \"amount\": 20.9,\n        \"currency\": \"USD\"\n    },\n    \"booking_window\": {\n        \"opens_at\": \"2019-06-02T00:00:00.000Z\",\n        \"closes_at\": \"2019-06-02T00:00:00.000Z\"\n    },\n    \"instructors\": [\n        {\n            \"name\": \"Axel\",\n            \"substitute\": false\n        },\n        {\n            \"name\": \"Blaze\",\n            \"substitute\": true\n        }\n    ],\n    \"rate\": 4.5\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://2c99438d-d60e-4669-838b-2841b9745e68.mock.pstmn.io/api/gyms/1/classes/1/slots",
+									"protocol": "https",
+									"host": [
+										"2c99438d-d60e-4669-838b-2841b9745e68",
+										"mock",
+										"pstmn",
+										"io"
+									],
+									"path": [
+										"api",
+										"gyms",
+										"1",
+										"classes",
+										"1",
+										"slots"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "",
+									"value": "",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_metadata\": {\n        \"errors\": 0\n    },\n    \"results\": [\n        {\n            \"id\": 2,\n            \"date\": \"2019-06-02T00:00:00-03:00\",\n            \"status\": \"active\",\n            \"room\": \"Room 2\",\n            \"enabled\": true,\n            \"length_in_minutes\": 60,\n            \"total_capacity\": 15,\n            \"total_booked\": 5,\n            \"product_id\": 200,\n            \"booking_window\": {\n                \"opens_at\": \"2019-06-02T08:00:00-03:00\",\n                \"closes_at\": \"2019-06-02T10:00:00-03:00\"\n            },\n            \"instructors\": [\n                {\n                    \"name\": \"Axel\",\n                    \"substitute\": false\n                },\n                {\n                    \"name\": \"Blaze\",\n                    \"substitute\": true\n                }\n            ],\n            \"rate\": 4.5\n        }\n    ],\n    \"errors\": []\n}"
+						},
+						{
+							"name": "Class Slots - Create - 400",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"room\": \"Room 2\",\n    \"length_in_minutes\": 60,\n    \"total_capacity\": 15,\n    \"status\": 1,\n    \"total_booked\": 5,\n    \"product_id\": 200,\n    \"booking_window\": {\n        \"opens_at\": \"2019-06-02T08:00:00-03:00\",\n        \"closes_at\": \"2019-06-02T10:00:00-03:00\"\n    },\n    \"instructors\": [\n        {\n            \"name\": \"Axel\",\n            \"substitute\": false\n        },\n        {\n            \"name\": \"Blaze\",\n            \"substitute\": true\n        }\n    ],\n    \"rate\": 4.5\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://2c99438d-d60e-4669-838b-2841b9745e68.mock.pstmn.io/api/gyms/2/classes/1/slots",
+									"protocol": "https",
+									"host": [
+										"2c99438d-d60e-4669-838b-2841b9745e68",
+										"mock",
+										"pstmn",
+										"io"
+									],
+									"path": [
+										"api",
+										"gyms",
+										"2",
+										"classes",
+										"1",
+										"slots"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/vnd.gympass.booking.v1+json; charset=utf-8",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_metadata\": {\n        \"errors\": 1\n    },\n    \"errors\": [\n        {\n            \"key\": \"create.class.slot.date.not.provided\",\n            \"message\": \"Field 'date' is mandatory for class slot creation.\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "3 - Login Keycloak",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody); ",
+									"var jwtData = JSON.parse(atob(res.access_token.split('.')[1]));",
+									"",
+									"var UNIQUE_TOKEN = jwtData.unique_token",
+									"",
+									"pm.environment.set(\"UNIQUE_TOKEN\", UNIQUE_TOKEN);",
+									"// tests[\"USER_SLUG = \" + USER_ID] = true;  ",
+									"",
+									"var gcrypts = {",
+									"    'gold-sobrenome': 'DQcRyISxVMgnJE1HKQgdDpAhDMXRfzTBRx+/ZIW4PHQ=',",
+									"    'thiago-lopes-64301ab1-8b1a-497f-801c-47b2ab443dc2': '4YgrP8Lgsj/qh6Vrd4wk5g6IhS6HqbsSmvY6YnSNC6A=',",
+									"    'rafael-sienna-40387606-e198-4ea7-bca5-d54d40d85c6e' : 'nGJk5PoP+BazaUrLMQ/KCfDqLXMQT9i+lMCAeLEQ01g=',",
+									"    'danilo-porcelani-976726cc-f8e0-4b5d-b76f-71a0bc010a57': 'PtfB5wHe7UVu5QMV22lBoTj6tzshDcqPilpIKuiygTFjH67mPGFa/CazrGBdrIVUBkrncvD7kV8PFM8BwywKtg==',",
+									"    'marcelo-marques': '6/ef0Heq3KkBxBaCvSxyLJFRQZtIKaqcJDa1Tz2fAlgndVn97bkd0jI1P+K1tBhrEFRVR1DYkbMplsRajMsSbA==',",
+									"    'katharine-padilha-de-paulo-59164e59-8a9e-43c7-bf4c-8e1d143986ff': 'wUuTthMrbhk0lTRT7+cJH1cwgyCjg8GrbQux2Pr/wvk2xqIp0WJNj0b+RR1l2JB5zCc45GRSNGxZjtxsbrHSug==',",
+									"    'kaic-nunes-bastidas': 'hxDz7z7PLNZUW2+r8r2592zNMKizqVD2O4eOsw8WaaM=',",
+									"    'katharine-padilha': 'rZ22xtyIa0xyisliyefscwdHfMIuGYrG2qPEMdUnU05yZT79FeZQ5OLYzJJ5vUT/r7V+cdPJLrMvhyVUVUqKBQ==',",
+									"    'lilyan-lacerda-e7db568c-f952-49c3-bbd7-fce4ca20fadc': 'sPUUI3jskGuPEyb68nVxxD0Ff/KWyrxqM91vM3Qi5gXJt5hRj5wDnMS4bwajzrc+P2r9CEfYlSSloI8z2j09Rw==',",
+									"    'katharine-padilha-372bb2c5-5545-426a-82e9-fa420b4f78bf': 'ckOTf5i9AFh8YSdZqs+DjRpl1Jh1MPgiG1Y7YwPNEpKIPViWrOtIgL0FDD1GvNPZvcd1Pnu782fDWdLqe7ZrEQ==',",
+									"    'katharine-padilha-de-paulo': '0XHT9Fsj9DtqhrepbEDXbZuNMUAoMnxXBbGrBfjODCSkPmu8wVApGXDIUf3mLQhQUzedCoc9EF2XzR6HVDC3zg=='",
+									"}",
+									"",
+									"pm.environment.set(\"GCRYPT\", gcrypts[USER_SLUG] || '');",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "thiago.lopes@gympass.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "lego@2020",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "client_id",
+									"value": "oauth-proxy",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "client_secret",
+									"value": "263eebba-6068-49e3-9f41-e3be7e3fbfed",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "client_id",
+									"value": "mobile-sso-test",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "porcelani2@gympass.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "kaic.bastidas@gympass.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "M8m5m10!",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "marcelo.marques+test@gympass.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "katharine.paulo@invillia.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "123Mudar",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "M8m5m10!!",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "marcelo.marques@gympass.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "client_id",
+									"value": "mobile-sso",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "natalia.braz+test@gympass.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "1234Qwer",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "black@gympass.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "lego@2020",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "invillia.katharine.paulo+test@ext.gympass.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "invillia.lilyan.lira+test6@ext.gympass.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "invillia.katharine.paulo@ext.gympass.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "invillia.katharine.paulo+test2@ext.gympass.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "Katharine123",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "gympass.qa+99091@outlook.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123Mudar",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{IDENTITY_URL}}/auth/realms/master/protocol/openid-connect/token",
+							"host": [
+								"{{IDENTITY_URL}}"
+							],
+							"path": [
+								"auth",
+								"realms",
+								"master",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4 - Get Booking Number",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var date = new Date();",
+									"date.setMinutes(date.getMinutes()-1);",
+									"pm.environment.set(\"from\", date.toISOString());",
+									"date.setMinutes(date.getMinutes()+31);",
+									"pm.environment.set(\"to\", date.toISOString());",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody); ",
+									"book_number = res[0].booking_number",
+									"pm.environment.set(\"book_number\", book_number);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BOOKING_URL}}/users/{{UNIQUE_TOKEN}}/bookings?from={{from}}&to={{to}}",
+							"host": [
+								"{{BOOKING_URL}}"
+							],
+							"path": [
+								"users",
+								"{{UNIQUE_TOKEN}}",
+								"bookings"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "{{from}}"
+								},
+								{
+									"key": "to",
+									"value": "{{to}}"
+								}
+							]
+						},
+						"description": "Examples of how to query a list of classes, according to the provided parameters."
+					},
+					"response": [
+						{
+							"name": "Bookings - Get all - Bad request for wrong query params",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.gympass.booking.v1+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://2c99438d-d60e-4669-838b-2841b9745e68.mock.pstmn.io/api/gyms/2/bookings?page=x&limit=z",
+									"protocol": "https",
+									"host": [
+										"2c99438d-d60e-4669-838b-2841b9745e68",
+										"mock",
+										"pstmn",
+										"io"
+									],
+									"path": [
+										"api",
+										"gyms",
+										"2",
+										"bookings"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "x"
+										},
+										{
+											"key": "limit",
+											"value": "z"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/vnd.gympass.booking.v1+json; charset=utf-8",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_metadata\": {\n        \"page\": 0,\n        \"pageSize\": 0,\n        \"total\": 0,\n        \"errors\": 2\n    },\n    \"errors\": [\n    \t{\n            \"key\": \"invalid.page.queryparam\",\n            \"message\": \"Invalid value for 'page' query parameter.\"\n        },\n        {\n            \"key\": \"invalid.limit.queryparam\",\n            \"message\": \"Invalid value for 'limit' query parameter.\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "Bookings - Get all",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.gympass.booking.v1+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://2c99438d-d60e-4669-838b-2841b9745e68.mock.pstmn.io/api/gyms/1/bookings",
+									"protocol": "https",
+									"host": [
+										"2c99438d-d60e-4669-838b-2841b9745e68",
+										"mock",
+										"pstmn",
+										"io"
+									],
+									"path": [
+										"api",
+										"gyms",
+										"1",
+										"bookings"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/vnd.gympass.booking.v1+json; charset=utf-8",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_metadata\": {\n        \"page\": 1,\n        \"pageSize\": 20,\n        \"total\": 2,\n        \"errors\": 0\n    },\n    \"results\": [\n        {\n            \"class\": {\n                \"name\": \"Judo Maneiro\",\n                \"slug\": \"judo-maneiro\",\n                \"gym\": {\n                    \"title\": \"Toca do Judoca\",\n                    \"slug\": \"toca-do-judoca\"\n                },\n                \"slot\": {\n                    \"room\": \"Room 7\",\n                    \"teachers\": [ \"Jigoro Kano\" ]\n                },\n            },\n            \"bookingNumber\": \"JUDO2019\",\n            \"bookedAt\": \"2019-06-01T09:27:13.000Z\",\n            \"status\": \"booked\",\n            \"firstBooking\": false,\n            \"userUniqueToken\": 3986663110\n        },\n        {\n            \"class\": {\n                \"name\": \"Pilates Maroto\",\n                \"slug\": \"pilates-maroto\",\n                \"gym\": {\n                    \"title\": \"Melindrotes Fitness\",\n                    \"slug\": \"melindrotes-fitness\"\n                },\n                \"slot\": {\n                    \"room\": \"Room 1\",\n                    \"teachers\": [ \"Clint Eastwood\", \"Bruce Lee\" ]\n                },\n            },\n            \"bookingNumber\": \"BKGP0392\",\n            \"bookedAt\": \"2019-06-02T15:30:00.000Z\",\n            \"status\": \"attended\",\n            \"firstBooking\": true,\n            \"userUniqueToken\": 1000000000\n        }\n    ]\n}"
+						},
+						{
+							"name": "Bookings - Get all with paging and limiting",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.gympass.booking.v1+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://2c99438d-d60e-4669-838b-2841b9745e68.mock.pstmn.io/api/gyms/3/bookings?page=2&limit=1",
+									"protocol": "https",
+									"host": [
+										"2c99438d-d60e-4669-838b-2841b9745e68",
+										"mock",
+										"pstmn",
+										"io"
+									],
+									"path": [
+										"api",
+										"gyms",
+										"3",
+										"bookings"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "2"
+										},
+										{
+											"key": "limit",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/vnd.gympass.booking.v1+json; charset=utf-8",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_metadata\": {\n        \"page\": 2,\n        \"pageSize\": 1,\n        \"total\": 2,\n        \"errors\": 0\n    },\n    \"results\": [\n        {\n            \"class\": {\n                \"name\": \"Pilates Maroto\",\n                \"slug\": \"pilates-maroto\",\n                \"gym\": {\n                    \"title\": \"Melindrotes Fitness\",\n                    \"slug\": \"melindrotes-fitness\"\n                },\n                \"slot\": {\n                    \"room\": \"Room 1\",\n                    \"teachers\": [ \"Clint Eastwood\", \"Bruce Lee\" ]\n                },\n            },\n            \"bookingNumber\": \"BKGP0392\",\n            \"bookedAt\": \"2019-06-02T15:30:00.000Z\",\n            \"status\": \"attended\",\n            \"firstBooking\": true,\n            \"userUniqueToken\": 1000000000\n        }\n    ]\n}"
+						},
+						{
+							"name": "Bookings - Get all - No records found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.gympass.booking.v1+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://2c99438d-d60e-4669-838b-2841b9745e68.mock.pstmn.io/api/gyms/4/bookings",
+									"protocol": "https",
+									"host": [
+										"2c99438d-d60e-4669-838b-2841b9745e68",
+										"mock",
+										"pstmn",
+										"io"
+									],
+									"path": [
+										"api",
+										"gyms",
+										"4",
+										"bookings"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/vnd.gympass.booking.v1+json; charset=utf-8",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_metadata\": {\n        \"page\": 0,\n        \"pageSize\": 0,\n        \"total\": 0,\n        \"errors\": 0\n    },\n    \"results\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "5 - Aprove Booking",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"gym_id\": 558,\n\t\"class_id\": 76,\n    \"status\": 6,\n    \"reason\": \"reason cancel\"\n}"
+						},
+						"url": {
+							"raw": "{{BOOKING_URL}}/gyms/{{gym_id}}/bookings/{{book_number}}",
+							"host": [
+								"{{BOOKING_URL}}"
+							],
+							"path": [
+								"gyms",
+								"{{gym_id}}",
+								"bookings",
+								"{{book_number}}"
+							]
+						},
+						"description": "Examples of how to create a new class resource."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CreateUserWithoutPlan",
+			"item": [
+				{
+					"name": "GetClienteOrder",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"var eligibility_item_id = res.orders[0].order_items.recurring.payments[0].eligibles[0].id",
+									"pm.environment.set(\"eligibility_item_id\", eligibility_item_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TAGUS_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{TAGUS_URL}}/v3/client-orders/client/{{CLIENT_ID}}",
+							"host": [
+								"{{TAGUS_URL}}"
+							],
+							"path": [
+								"v3",
+								"client-orders",
+								"client",
+								"{{CLIENT_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddElegibleMember",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let email = `gympass.qa+${random()}@outlook.com`",
+									"pm.environment.set(\"email_user\", email)",
+									"",
+									"function random() {",
+									"  let number = Math.floor(Math.random() * Math.pow(10, 6));",
+									"  return (number.toString().length < 6) ? random(6) : number;",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{HADES_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"eligible_item_id\": \"{{eligibility_item_id}}\",\n        \"email\": \"{{email_user}}\",\n        \"full_name\": \"{{user_name}}\"\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HADES_URL}}/v2/clients/{{CLIENT_ID}}/eligible-members",
+							"host": [
+								"{{HADES_URL}}"
+							],
+							"path": [
+								"v2",
+								"clients",
+								"{{CLIENT_ID}}",
+								"eligible-members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetElebilityByEmail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"let eligible_member_id = res.eligible_member_id",
+									"pm.environment.set(\"eligible_member_id\", eligible_member_id);",
+									"var email = pm.environment.get(\"email_user\")",
+									"pm.environment.set(\"email_user\", decodeURIComponent(email))"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var email = pm.environment.get(\"email_user\")",
+									"pm.environment.set(\"email_user\", encodeURIComponent(email))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{HADES_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HADES_URL}}/v1/eligibility/match?client_id={{CLIENT_ID}}&email={{email_user}}",
+							"host": [
+								"{{HADES_URL}}"
+							],
+							"path": [
+								"v1",
+								"eligibility",
+								"match"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{CLIENT_ID}}"
+								},
+								{
+									"key": "email",
+									"value": "{{email_user}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateEligibility",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"let eligibility_id = res.eligibility_id;",
+									"pm.environment.set(\"eligibility_id\", eligibility_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TAGUS_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"associate_eligibility_id\": \"{{eligible_member_id}}\",\n    \"eligibility_type\": \"ASSOCIATE\",\n    \"eligible_item_id\": \"{{eligibility_item_id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{TAGUS_URL}}/v1/eligibilities",
+							"host": [
+								"{{TAGUS_URL}}"
+							],
+							"path": [
+								"v1",
+								"eligibilities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GenerateToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.unset(\"seed\");",
+									"var res = JSON.parse(responseBody);",
+									"let seed = res.seed",
+									"pm.environment.set(\"seed\", seed);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const { v4: uuidv4 } = require('uuid');",
+									"let uuid = uuidv4()",
+									"pm.environment.set(\"uuid\", uuid)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-gympass-correlation-id",
+								"value": "{{uuid}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client_id\": \"{{CLIENT_ID}}\",\n    \"country_name\": \"BR\",\n    \"language\": \"pt-br\",\n    \"email\": \"{{email_user}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SIGNUP_URL}}/generate-token",
+							"host": [
+								"{{SIGNUP_URL}}"
+							],
+							"path": [
+								"generate-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SignupMember",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"",
+									"pm.environment.set(\"USER_ID\", res.user_id);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-gympass-correlation-id",
+								"value": "{{uuid}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client_id\": \"{{CLIENT_ID}}\",\n    \"country_name\": \"BR\",\n    \"language\": \"pt-br\",\n    \"email\": \"{{email_user}}\",\n    \"seed\": \"{{seed}}\",\n    \"token\": 5429, //Get token in email\n    \"full_name\": \"{{user_name}}\",\n    \"password\": \"{{password}}\",\n    \"legal_docs\": [\n        {\n            \"doc_type\": \"TERMS_AND_CONDITIONS\",\n            \"country_id\": \"BR\",\n            \"version\": \"F79zzEvwqqVy0ox5UHAcb_m075FUSy00\"\n        }\n    ],\n    \"eligibility_id\": \"{{eligibility_id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SIGNUP_URL}}/member",
+							"host": [
+								"{{SIGNUP_URL}}"
+							],
+							"path": [
+								"member"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CreateUserWithPlan",
+			"item": [
+				{
+					"name": "GetClienteOrder",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"var eligibility_item_id = res.orders[0].order_items.recurring.payments[0].eligibles[0].id",
+									"pm.environment.set(\"eligibility_item_id\", eligibility_item_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TAGUS_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{TAGUS_URL}}/v3/client-orders/client/{{CLIENT_ID}}",
+							"host": [
+								"{{TAGUS_URL}}"
+							],
+							"path": [
+								"v3",
+								"client-orders",
+								"client",
+								"{{CLIENT_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddElegibleMember",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let email = `gympass.qa+${random()}@outlook.com`",
+									"pm.environment.set(\"email_user\", email)",
+									"",
+									"function random() {",
+									"  let number = Math.floor(Math.random() * Math.pow(10, 6));",
+									"  return (number.toString().length < 6) ? random(6) : number;",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{HADES_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"eligible_item_id\": \"{{eligibility_item_id}}\",\n        \"email\": \"{{email_user}}\",\n        \"full_name\": \"{{user_name}}\"\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HADES_URL}}/v2/clients/{{CLIENT_ID}}/eligible-members",
+							"host": [
+								"{{HADES_URL}}"
+							],
+							"path": [
+								"v2",
+								"clients",
+								"{{CLIENT_ID}}",
+								"eligible-members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetElebilityByEmail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"let eligible_member_id = res.eligible_member_id",
+									"pm.environment.set(\"eligible_member_id\", eligible_member_id);",
+									"var email = pm.environment.get(\"email_user\")",
+									"pm.environment.set(\"email_user\", decodeURIComponent(email))"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var email = pm.environment.get(\"email_user\")",
+									"pm.environment.set(\"email_user\", encodeURIComponent(email))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{HADES_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{HADES_URL}}/v1/eligibility/match?client_id={{CLIENT_ID}}&email={{email_user}}",
+							"host": [
+								"{{HADES_URL}}"
+							],
+							"path": [
+								"v1",
+								"eligibility",
+								"match"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{CLIENT_ID}}"
+								},
+								{
+									"key": "email",
+									"value": "{{email_user}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateEligibility",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"let eligibility_id = res.eligibility_id;",
+									"pm.environment.set(\"eligibility_id\", eligibility_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TAGUS_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"associate_eligibility_id\": \"{{eligible_member_id}}\",\n    \"eligibility_type\": \"ASSOCIATE\",\n    \"eligible_item_id\": \"{{eligibility_item_id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{TAGUS_URL}}/v1/eligibilities",
+							"host": [
+								"{{TAGUS_URL}}"
+							],
+							"path": [
+								"v1",
+								"eligibilities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GenerateToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.unset(\"seed\");",
+									"var res = JSON.parse(responseBody);",
+									"let seed = res.seed",
+									"pm.environment.set(\"seed\", seed);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const { v4: uuidv4 } = require('uuid');",
+									"let uuid = uuidv4()",
+									"pm.environment.set(\"uuid\", uuid)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-gympass-correlation-id",
+								"value": "{{uuid}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client_id\": \"{{CLIENT_ID}}\",\n    \"country_name\": \"BR\",\n    \"language\": \"pt-br\",\n    \"email\": \"{{email_user}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SIGNUP_URL}}/generate-token",
+							"host": [
+								"{{SIGNUP_URL}}"
+							],
+							"path": [
+								"generate-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SignupMember",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"pm.environment.set(\"USER_ID\", res.user_id);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-gympass-correlation-id",
+								"value": "{{uuid}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client_id\": \"{{CLIENT_ID}}\",\n    \"country_name\": \"BR\",\n    \"language\": \"pt-br\",\n    \"email\": \"{{email_user}}\",\n    \"seed\": \"{{seed}}\",\n    \"token\": 5429, //Get token in email\n    \"full_name\": \"{{user_name}}\",\n    \"password\": \"{{password}}\",\n    \"legal_docs\": [\n        {\n            \"doc_type\": \"TERMS_AND_CONDITIONS\",\n            \"country_id\": \"BR\",\n            \"version\": \"F79zzEvwqqVy0ox5UHAcb_m075FUSy00\"\n        }\n    ],\n    \"eligibility_id\": \"{{eligibility_id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SIGNUP_URL}}/member",
+							"host": [
+								"{{SIGNUP_URL}}"
+							],
+							"path": [
+								"member"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AssociatePlanDiamondPlusUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"let signed_payload = res[0].signed_payload",
+									"pm.environment.set(\"signed_payload\", signed_payload);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"amount\": \"999\",\n        \"currency\": \"BRL\",\n        \"country\": \"BR\",\n        \"free_trial_days\": 7,\n        \"user_id\": \"{{USER_ID}}\",\n        \"plan_id\": \"929de5c8-62ad-4a3f-bb02-15f5564fc19f\",\n        \"offer_plan_id\": \"f02a1483-857e-4a55-87fb-31cd4303e86b\",\n        \"offer_id\": \"beccbbaf-d26d-4608-a547-512581dee076\",\n        \"eligible_id\": \"a077b4d0-abe1-4fb4-bda8-6ae26614592b\",\n        \"eligibility_group_id\": \"068dbc79-bf78-4c0b-bdd5-212f8c4f6718\"\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BILLING_URL}}/calculate",
+							"host": [
+								"{{BILLING_URL}}"
+							],
+							"path": [
+								"calculate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CheckoutPlan",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"signed_payload\": \"{{signed_payload}}\",\n    \"source\": \"TAGUS_USER\",\n    \"request_date\": \"{{$isoTimestamp}}\",\n    \"payment_method\": {\n        \"payment_method_type\": \"CREDIT_CARD\",\n        \"encrypted_card_data\": \"PrZ3aMDvfJ6JRYXda4/teCLXO5eGYC2wYbPa5YQyXE48rO+Z+OrsedmrGEkD6vOcjvC9/XVoJCklSvJsogFmqM2ABn15wSbY8mm9OUlZ3lXbIe6HpEkcUzQMNYI1Ae9BKA9nj49uRFBt+AVgeCLiK0zQyMFsk0EQ5AScpogNz7nHERfzzuVIZDfybwwiLGD1z50Cf92nEjm8g2CsI0WQeyfvm/YLhmnJ+kB+DvmG4gr6VW8hZMRlLM+50zL1FlEJYI2Y0ad0Zh2Mk5SKZbGuA5VXNYdIkLwUKYqs+hiwEqsGnzkOCa1mEqZbxYoafcGkGQicGffHuXH2ZvfI8W/Fnw==\",\n        \"account_holder\": \"TEST AUTOMATION\",\n        \"card_display\": \"***********002\",\n        \"expiry_month\": \"03\",\n        \"expiry_year\": \"2030\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CHECKOUT_URL}}/checkout",
+							"host": [
+								"{{CHECKOUT_URL}}"
+							],
+							"path": [
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cancel Plan",
+			"item": [
+				{
+					"name": "GetUserByEmail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"let id_user = res.results[0].id",
+									"pm.environment.set(\"USER_ID\", id_user);",
+									"var email = pm.environment.get(\"email_user\")",
+									"pm.environment.set(\"email_user\", decodeURIComponent(email))",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var email = pm.environment.get(\"email_user\")",
+									"pm.environment.set(\"email_user\", encodeURIComponent(email))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TAGUS_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{TAGUS_URL}}/v1/users?email={{email_user}}",
+							"host": [
+								"{{TAGUS_URL}}"
+							],
+							"path": [
+								"v1",
+								"users"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "gympass.qa%2B323673%40outlook.com",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "{{email_user}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserOrder",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = JSON.parse(responseBody);",
+									"let id_order = res[0].id",
+									"pm.environment.set(\"id_order\", id_order);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TAGUS_TOKEN}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{TAGUS_URL}}/v2/users/{{USER_ID}}/orders",
+							"host": [
+								"{{TAGUS_URL}}"
+							],
+							"path": [
+								"v2",
+								"users",
+								"{{USER_ID}}",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "exclude",
+									"value": "CANCELED",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CancelPlanByOrderId",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{TOKEN_ATLANTIC}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{ATLANTIC_URL}}/v1/user-orders/{{id_order}}/cancel",
+							"host": [
+								"{{ATLANTIC_URL}}"
+							],
+							"path": [
+								"v1",
+								"user-orders",
+								"{{id_order}}",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
